@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_SRC_PARSING_PARSE_TAB_H_INCLUDED
 # define YY_YY_SRC_PARSING_PARSE_TAB_H_INCLUDED
@@ -53,34 +54,39 @@ extern int yydebug;
 #include "parse.tab.h"
 #include "memory_pool.h"
 
-#line 57 "src/parsing/parse.tab.h"
+#line 58 "src/parsing/parse.tab.h"
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    PIPE = 258,
-    BCKGRND = 259,
-    SQUOTE = 260,
-    EQUALS = 261,
-    REDIRIN = 262,
-    REDIROUT = 263,
-    REDIROUTAPP = 264,
-    END = 265,
-    ECHO_TOK = 266,
-    EXPORT_TOK = 267,
-    CD_TOK = 268,
-    PWD_TOK = 269,
-    JOBS_TOK = 270,
-    KILL_TOK = 271,
-    EOC_TOK = 272,
-    STR = 273,
-    SIM_STR = 274,
-    ID = 275,
-    NUM = 276,
-    EXIT_TOK = 277
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    PIPE = 258,                    /* PIPE  */
+    BCKGRND = 259,                 /* BCKGRND  */
+    SQUOTE = 260,                  /* SQUOTE  */
+    EQUALS = 261,                  /* EQUALS  */
+    REDIRIN = 262,                 /* REDIRIN  */
+    REDIROUT = 263,                /* REDIROUT  */
+    REDIROUTAPP = 264,             /* REDIROUTAPP  */
+    END = 265,                     /* END  */
+    ECHO_TOK = 266,                /* ECHO_TOK  */
+    EXPORT_TOK = 267,              /* EXPORT_TOK  */
+    CD_TOK = 268,                  /* CD_TOK  */
+    PWD_TOK = 269,                 /* PWD_TOK  */
+    JOBS_TOK = 270,                /* JOBS_TOK  */
+    KILL_TOK = 271,                /* KILL_TOK  */
+    EOC_TOK = 272,                 /* EOC_TOK  */
+    STR = 273,                     /* STR  */
+    SIM_STR = 274,                 /* SIM_STR  */
+    ID = 275,                      /* ID  */
+    NUM = 276,                     /* NUM  */
+    EXIT_TOK = 277                 /* EXIT_TOK  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -98,7 +104,7 @@ union YYSTYPE
   Cmds cmd_list;
   Redirect redirect;
 
-#line 102 "src/parsing/parse.tab.h"
+#line 108 "src/parsing/parse.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -109,6 +115,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
+
 int yyparse (CommandHolder** __ret_cmds);
+
 
 #endif /* !YY_YY_SRC_PARSING_PARSE_TAB_H_INCLUDED  */

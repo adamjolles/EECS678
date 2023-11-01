@@ -9,22 +9,8 @@
 
 #include <stdbool.h>
 #include <unistd.h>
-
+#include "bq.h"
 #include "command.h"
-#include "deque.h"
-
-IMPLEMENT_DEQUE_STRUCT(pidQue, pid_t)
-PROTOTYPE_DEQUE(pidQue, pid_t)
-
-typedef struct QuashJobs
-{
-    int jobID;
-    pidQue pids;
-    const char *cmd;
-} QuashJob;
-
-IMPLEMENT_DEQUE_STRUCT(jobQue, QuashJob)
-PROTOTYPE_DEQUE(jobQue, QuashJob)
 
 /**
  * @brief Function to get environment variable values
@@ -68,42 +54,42 @@ void check_jobs_bg_status();
  * We use the minimum of what a Job structure should contain to pass to this
  * function.
  *
- * @param job_id Job identifier number.
+ * @param t_id Job identifier number.
  *
  * @param pid Process id of a process belonging to this job.
  *
  * @param cmd String holding an approximation of what the user typed in for the
  * command.
  */
-void print_job(int job_id, pid_t pid, const char *cmd);
+void print_job(int t_id, pid_t pid, const char *cmd);
 
 /**
  * @brief Print the start up of a background job to standard out
  *
  * We use the minimum of what a Job should contain to pass to this function.
  *
- * @param job_id Job identifier number.
+ * @param t_id Job identifier number.
  *
  * @param pid Process id of a process belonging to this job.
  *
  * @param cmd String holding an aproximation of what the user typed in for the
  * command.
  */
-void print_job_bg_start(int job_id, pid_t pid, const char *cmd);
+void print_job_bg_start(int t_id, pid_t pid, const char *cmd);
 
 /**
  * @brief Print the completion of a background job to standard out
  *
  * We use the minimum of what a Job should contain to pass to this function.
  *
- * @param job_id Job identifier number.
+ * @param t_id Job identifier number.
  *
  * @param pid Process id of a process belonging to this job.
  *
  * @param cmd String holding an aproximation of what the user typed in for the
  * command.
  */
-void print_job_bg_complete(int job_id, pid_t pid, const char *cmd);
+void print_job_bg_complete(int t_id, pid_t pid, const char *cmd);
 
 /**
  * @brief Run a generic (non-builtin) command
@@ -175,5 +161,9 @@ void run_jobs();
  * @sa Command
  */
 void run_script(CommandHolder *holders);
+
+void construct_background_job_queue();
+
+void destructor_background_job_queue();
 
 #endif

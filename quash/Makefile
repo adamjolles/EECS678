@@ -13,8 +13,8 @@ CFLAGS = -Wall -g
 ####################################################################
 # NOTE: The submission scripts assume all files in `CFILELIST` end with
 # .c and all files in `HFILES` end in .h
-CFILELIST = quash.c command.c execute.c parsing/memory_pool.c parsing/parsing_interface.c parsing/parse.tab.c parsing/lex.yy.c
-HFILELIST = quash.h command.h execute.h parsing/memory_pool.h parsing/parsing_interface.h parsing/parse.tab.h deque.h debug.h
+CFILELIST = quash.c command.c execute.c parsing/memory_pool.c parsing/parsing_interface.c parsing/parse.tab.c parsing/lex.yy.c task.c queue.c bq.c
+HFILELIST = quash.h command.h execute.h parsing/memory_pool.h parsing/parsing_interface.h parsing/parse.tab.h deque.h debug.h task.h queue.h bq.h
 
 # Add libraries that need linked as needed (e.g. -lm -lpthread)
 LIBLIST =
@@ -115,7 +115,7 @@ clean:
 	-rm -rf $(PROGNAME) obj sandbox *~ $(STUDENTID)-project1-quash* src/parsing/parse.output valgrind_report.txt output_report.txt
 
 deep-clean: clean
-	-rm -rf doc src/parsing/parse.tab.c src/parsing/parse.tab.h src/parsing/lex.yy.c *.tar.gz *.zip
+	-rm -rf doc src/parsing/parse.tab.c src/parsing/parse.tab.h src/parsing/lex.yy.c
 
 %.c: %.y
 %.c: %.l

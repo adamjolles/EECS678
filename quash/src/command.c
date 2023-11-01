@@ -11,179 +11,168 @@
 #include <string.h>
 
 // Move the created command into a holder
-CommandHolder mk_command_holder(char *redirect_in,
-                                char *redirect_out,
+CommandHolder mk_command_holder(char* redirect_in,
+                                char* redirect_out,
                                 char flags,
-                                Command cmd)
-{
-  return (CommandHolder){
-      redirect_in,
-      redirect_out,
-      flags,
-      cmd};
+                                Command cmd) {
+  return (CommandHolder) {
+    redirect_in,
+    redirect_out,
+    flags,
+    cmd
+  };
 }
 
 // Create GenericCommand
-Command mk_generic_command(char **args)
-{
+Command mk_generic_command(char** args) {
   Command cmd;
 
-  cmd.generic = (GenericCommand){
-      GENERIC,
-      args};
+  cmd.generic = (GenericCommand) {
+    GENERIC,
+    args
+  };
 
   return cmd;
 }
 
 // Create EchoCommand
-Command mk_echo_command(char **strs)
-{
+Command mk_echo_command(char** strs) {
   Command cmd;
 
-  cmd.generic = (GenericCommand){
-      ECHO,
-      strs};
+  cmd.generic = (GenericCommand) {
+    ECHO,
+    strs
+  };
 
   return cmd;
 }
 
 // Create ExportCommand
-Command mk_export_command(char *env_var, char *val)
-{
+Command mk_export_command(char* env_var, char* val) {
   Command cmd;
 
-  cmd.export = (ExportCommand){
-      EXPORT,
-      env_var,
-      val};
+  cmd.export = (ExportCommand) {
+    EXPORT,
+    env_var,
+    val
+  };
 
   return cmd;
 }
 
 // Create CDCommand structure
-Command mk_cd_command(char *dir)
-{
+Command mk_cd_command(char* dir) {
   Command cmd;
 
-  cmd.cd = (CDCommand){
-      CD,
-      dir};
+  cmd.cd = (CDCommand) {
+    CD,
+    dir
+  };
 
   return cmd;
 }
 
 // Create KillCommand structure
-Command mk_kill_command(char *sig, char *job)
-{
+Command mk_kill_command(char* sig, char* job) {
   Command cmd;
 
-  cmd.kill = (KillCommand){
-      KILL,
-      strtol(sig, NULL, 10),
-      strtol(job, NULL, 10),
-      sig,
-      job};
+  cmd.kill = (KillCommand) {
+    KILL,
+    strtol(sig, NULL, 10),
+    strtol(job, NULL, 10),
+    sig,
+    job
+  };
 
   return cmd;
 }
 
 // Create PWDCommand structure
-Command mk_pwd_command()
-{
+Command mk_pwd_command() {
   Command cmd;
 
-  cmd.pwd = (PWDCommand){
-      PWD};
+  cmd.pwd = (PWDCommand) {
+    PWD
+  };
 
   return cmd;
 }
 
 // Create JobCommand structure
-Command mk_jobs_command()
-{
+Command mk_jobs_command() {
   Command cmd;
 
-  cmd.jobs = (JobsCommand){
-      JOBS};
+  cmd.jobs = (JobsCommand) {
+    JOBS
+  };
 
   return cmd;
 }
 
 // Create ExitCommand structure
-Command mk_exit_command()
-{
+Command mk_exit_command() {
   Command cmd;
 
-  cmd.exit = (ExitCommand){
-      EXIT};
+  cmd.exit = (ExitCommand) {
+    EXIT
+  };
 
   return cmd;
 }
 
 // Create EOCCommand structure
-Command mk_eoc()
-{
+Command mk_eoc() {
   Command cmd;
 
-  cmd.eoc = (EOCCommand){
-      EOC};
+  cmd.eoc = (EOCCommand) {
+    EOC
+  };
 
   return cmd;
 }
 
-CommandType get_command_type(Command cmd)
-{
+
+CommandType get_command_type(Command cmd) {
   return cmd.simple.type;
 }
 
-CommandType get_command_holder_type(CommandHolder holder)
-{
+CommandType get_command_holder_type(CommandHolder holder) {
   return get_command_type(holder.cmd);
 }
 
 #ifdef DEBUG
-static void __print_generic_cmd(GenericCommand cmd)
-{
-  if (cmd.args != NULL)
-  {
+static void __print_generic_cmd(GenericCommand cmd) {
+  if (cmd.args != NULL) {
     for (size_t i = 0; cmd.args[i] != NULL; ++i)
       printf("[%s] ", cmd.args[i]);
   }
-  else
-  {
+  else {
     printf("#NULL# ");
   }
 }
 
-static void __print_echo_cmd(EchoCommand cmd)
-{
+static void __print_echo_cmd(EchoCommand cmd) {
   printf("%%ECHO%%");
 }
 
-static void __print_export_cmd(ExportCommand cmd)
-{
+static void __print_export_cmd(ExportCommand cmd) {
   printf("%%EXPORT%% [VAR: %s] [VAL: %s]", cmd.env_var, cmd.val);
 }
 
-static void __print_cd_cmd(CDCommand cmd)
-{
+static void __print_cd_cmd(CDCommand cmd) {
   printf("%%CD%% [DIR: %s]", cmd.dir);
 }
 
-static void __print_kill_cmd(KillCommand cmd)
-{
+static void __print_kill_cmd(KillCommand cmd) {
   printf("%%KILL%% [JOB: %d] [SIG: %d]", cmd.sig, cmd.job);
 }
 
-static void __print_simple_cmd(const char *str)
-{
+static void __print_simple_cmd(const char* str) {
   printf("%%%s%%", str);
 }
 
-static void __print_command(Command cmd)
-{
-  switch (get_command_type(cmd))
-  {
+static void __print_command(Command cmd) {
+  switch (get_command_type(cmd)) {
   case GENERIC:
     __print_generic_cmd(cmd.generic);
     break;
@@ -225,8 +214,7 @@ static void __print_command(Command cmd)
   }
 }
 
-static void __print_command_holder(CommandHolder holder)
-{
+static void __print_command_holder(CommandHolder holder) {
   putc('{', stdout);
 
   __print_command(holder.cmd);
@@ -262,14 +250,11 @@ static void __print_command_holder(CommandHolder holder)
   putc('}', stdout);
 }
 
-void debug_print_script(const CommandHolder *holders)
-{
-  if (holders != NULL)
-  {
+void debug_print_script(const CommandHolder* holders) {
+  if (holders != NULL) {
     size_t i;
 
-    for (i = 0; get_command_holder_type(holders[i]) != EOC; ++i)
-    {
+    for (i = 0; get_command_holder_type(holders[i]) != EOC; ++i) {
       __print_command_holder(holders[i]);
       printf("\n");
     }
@@ -282,9 +267,8 @@ void debug_print_script(const CommandHolder *holders)
 #else
 
 // Do nothing
-void debug_print_script(const CommandHolder *holders)
-{
-  (void)holders;
+void debug_print_script(const CommandHolder* holders) {
+  (void) holders;
 }
 
 #endif

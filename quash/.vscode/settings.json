@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "fcntl.h": "c",
+    "backgroundqueue.h": "c",
+    "job.h": "c",
+    "stdio.h": "c"
+  }
+}

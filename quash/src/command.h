@@ -45,12 +45,12 @@
  * @brief Flag bit indicating whether a @a GenericCommand should be run in
  * the background
  */
-#define REDIRECT_IN (0x01)
-#define REDIRECT_OUT (0x04)
+#define REDIRECT_IN     (0x01)
+#define REDIRECT_OUT    (0x04)
 #define REDIRECT_APPEND (0x08)
-#define PIPE_IN (0x10)
-#define PIPE_OUT (0x20)
-#define BACKGROUND (0x40)
+#define PIPE_IN         (0x10)
+#define PIPE_OUT        (0x20)
+#define BACKGROUND      (0x40)
 
 /**
  * @brief All possible types of commands
@@ -60,8 +60,7 @@
  *
  * @sa Command
  */
-typedef enum CommandType
-{
+typedef enum CommandType {
   EOC = 0, // psudo-command declaring the end of a command array
   GENERIC,
   ECHO,
@@ -87,8 +86,7 @@ typedef enum CommandType
  *
  * @sa Command, CommandType
  */
-typedef struct SimpleCommand
-{
+typedef struct SimpleCommand {
   CommandType type; /**< Type of command */
 } SimpleCommand;
 
@@ -98,10 +96,9 @@ typedef struct SimpleCommand
  *
  * @sa Command
  */
-typedef struct GenericCommand
-{
+typedef struct GenericCommand {
   CommandType type; /**< Type of command */
-  char **args;      /**< A NULL terminated array of c-strings ready to pass to
+  char** args;      /**< A NULL terminated array of c-strings ready to pass to
                      * @a exec functions */
 } GenericCommand;
 
@@ -119,11 +116,10 @@ typedef GenericCommand EchoCommand;
  *
  * @sa CommandType, lookup_env(), write_env(), Command
  */
-typedef struct ExportCommand
-{
+typedef struct ExportCommand {
   CommandType type; /**< Type of command */
-  char *env_var;    /**< Name of environment variable to set */
-  char *val;        /**< String that should be stored in @a env_var environment
+  char* env_var;    /**< Name of environment variable to set */
+  char* val;        /**< String that should be stored in @a env_var environment
                      * variable */
 } ExportCommand;
 
@@ -132,10 +128,9 @@ typedef struct ExportCommand
  *
  * @sa realpath(), Command
  */
-typedef struct CDCommand
-{
+typedef struct CDCommand {
   CommandType type; /**< Type of command */
-  char *dir;        /**< Path to the directory we wish to change to */
+  char* dir;        /**< Path to the directory we wish to change to */
 } CDCommand;
 
 /**
@@ -143,13 +138,12 @@ typedef struct CDCommand
  *
  * @sa CommandType, Command
  */
-typedef struct KillCommand
-{
+typedef struct KillCommand {
   CommandType type; /**< Type of command */
   int sig;          /**< Signal to send to the job */
   int job;          /**< Job id number */
-  char *sig_str;    /**< String holding the signal number (used for printing) */
-  char *job_str;    /**< String holding the job id number (used for printing) */
+  char* sig_str;    /**< String holding the signal number (used for printing) */
+  char* job_str;    /**< String holding the job id number (used for printing) */
 } KillCommand;
 
 /**
@@ -191,8 +185,7 @@ typedef SimpleCommand EOCCommand;
  * ExportCommand, CDCommand, KillCommand, PWDCommand, JobsCommand, ExitCommand,
  * EOCCommand
  */
-typedef union Command
-{
+typedef union Command {
   SimpleCommand simple;   /**< Read structure as a @a SimpleCommand */
   GenericCommand generic; /**< Read structure as a @a GenericCommand */
   EchoCommand echo;       /**< Read structure as a @a ExportCommand */
@@ -211,11 +204,10 @@ typedef union Command
  * @sa REDIRECT_IN, REDIRECT_OUT, REDIRECT_APPEND, PIPE_IN, PIPE_OUT,
  * BACKGROUND, Command
  */
-typedef struct CommandHolder
-{
-  char *redirect_in;  /**< Redirect standard in of this command to a file name
+typedef struct CommandHolder {
+  char* redirect_in;  /**< Redirect standard in of this command to a file name
                        * @a redirect_in */
-  char *redirect_out; /**< Redirect standard out of this command to a file name
+  char* redirect_out; /**< Redirect standard out of this command to a file name
                        * @a redirect_out */
   char flags;         /**< A set of bits that hold information about how to execute the
                        * command. The properties can be extracted from the flags field by using a
@@ -257,7 +249,7 @@ typedef struct CommandHolder
  * @sa CommandType, REDIRECT_IN, REDIRECT_OUT, REDIRECT_APPEND, PIPE_IN, PIPE_OUT,
  * BACKGROUND, Command, CommandHolder
  */
-CommandHolder mk_command_holder(char *redirect_in, char *redirect_out, char flags, Command cmd);
+CommandHolder mk_command_holder(char* redirect_in, char* redirect_out, char flags, Command cmd);
 
 /**
  * @brief Create a @a GenericCommand structure and return a copy
@@ -270,7 +262,7 @@ CommandHolder mk_command_holder(char *redirect_in, char *redirect_out, char flag
  * @sa CommandType, REDIRECT_IN, REDIRECT_OUT, REDIRECT_APPEND, PIPE_IN, PIPE_OUT,
  * BACKGROUND, Command, GenericCommand
  */
-Command mk_generic_command(char **args);
+Command mk_generic_command(char** args);
 
 /**
  * @brief Create a @a GenericCommand structure and return a copy
@@ -280,7 +272,7 @@ Command mk_generic_command(char **args);
  * @sa CommandType, REDIRECT_IN, REDIRECT_OUT, REDIRECT_APPEND, PIPE_IN, PIPE_OUT,
  * BACKGROUND, Command, GenericCommand
  */
-Command mk_echo_command(char **args);
+Command mk_echo_command(char** args);
 
 /**
  * @brief Create a @a ExportCommand structure and return a copy
@@ -293,7 +285,7 @@ Command mk_echo_command(char **args);
  *
  * @sa lookup_env(), write_env(), Command, ExportCommand
  */
-Command mk_export_command(char *env_var, char *val);
+Command mk_export_command(char* env_var, char* val);
 
 /**
  * @brief Create a @a CDCommand structure and return a copy
@@ -304,7 +296,7 @@ Command mk_export_command(char *env_var, char *val);
  *
  * @sa realpath(), Command, CDCommand
  */
-Command mk_cd_command(char *dir);
+Command mk_cd_command(char* dir);
 
 /**
  * @brief Create a @a KillCommand structure and return a copy
@@ -317,7 +309,7 @@ Command mk_cd_command(char *dir);
  *
  * @sa Command, KillCommand
  */
-Command mk_kill_command(char *sig, char *job);
+Command mk_kill_command(char* sig, char* job);
 
 /**
  * @brief Create a @a PWDCommand structure and return a copy
@@ -393,6 +385,6 @@ CommandType get_command_holder_type(CommandHolder holder);
  *
  * @sa CommandHolder
  */
-void debug_print_script(const CommandHolder *holders);
+void debug_print_script(const CommandHolder* holders);
 
 #endif
