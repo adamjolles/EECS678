@@ -19,8 +19,7 @@ float scheduler_average_response_time  ();
 void  scheduler_clean_up               ();
 
 void  scheduler_show_queue             ();
-int check_idle_core                    ();
-void decrease_remaining_time           (int time);
-int lowest_priority_job                (void *job);
+int   check_idle_core                  ();
+void  decrease_remaining_time          (int time);
 
 #endif /* LIBSCHEDULER_H_ */

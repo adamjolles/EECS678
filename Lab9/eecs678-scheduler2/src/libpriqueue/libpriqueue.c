@@ -6,6 +6,17 @@
 
 #include "libpriqueue.h"
 
+static int resize_queue(priqueue_t *q, int new_capacity)
+{
+  void **new_elements = (void **)realloc(q->elements, sizeof(void *) * new_capacity);
+  if (new_elements == NULL)
+  {
+    return -1;
+  }
+  q->elements = new_elements;
+  q->capacity = new_capacity;
+  return 0;
+}
 
 /**
   Initializes the priqueue_t data structure.
@@ -19,7 +30,15 @@
  */
 void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
 {
-
+  q->size = 0;
+  q->capacity = 10;
+  q->elements = (void **)malloc(sizeof(void *) * q->capacity);
+  if (q->elements == NULL)
+  {
+    fprintf(stderr, "Memory allocation failed.\n");
+    exit(EXIT_FAILURE);
+  }
+  q->comparer = comparer;
 }
 
 
@@ -32,7 +51,23 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
-	return -1;
+  if (q->size == q->capacity)
+  {
+    if (resize_queue(q, q->capacity * 2) == -1)
+    {
+      fprintf(stderr, "Unable to resize priority queue.\n");
+      return -1;
+    }
+  }
+
+  int i;
+  for (i = q->size; i > 0 && q->comparer(q->elements[i - 1], ptr) > 0; i--)
+  {
+    q->elements[i] = q->elements[i - 1];
+  }
+  q->elements[i] = ptr;
+  q->size++;
+  return i;
 }
 
 
@@ -44,11 +79,10 @@ int priqueue_offer(priqueue_t *q, void *ptr)
   @return pointer to element at the head of the queue
   @return NULL if the queue is empty
  */
-void *priqueue_peek(priqueue_t *q)
+inline void *priqueue_peek(priqueue_t *q)
 {
-	return NULL;
+  return (q->size == 0) ? NULL : q->elements[0];
 }
-
 
 /**
   Retrieves and removes the head of this queue, or NULL if this queue
@@ -60,7 +94,16 @@ void *priqueue_peek(priqueue_t *q)
  */
 void *priqueue_poll(priqueue_t *q)
 {
-	return NULL;
+  if (q->size == 0)
+    return NULL;
+
+  void *result = q->elements[0];
+  for (int i = 1; i < q->size; i++)
+  {
+    q->elements[i - 1] = q->elements[i];
+  }
+  q->size--;
+  return result;
 }
 
 
@@ -73,9 +116,9 @@ void *priqueue_poll(priqueue_t *q)
   @return the index'th element in the queue
   @return NULL if the queue does not contain the index'th element
  */
-void *priqueue_at(priqueue_t *q, int index)
+inline void *priqueue_at(priqueue_t *q, int index)
 {
-	return NULL;
+  return (index < 0 || index >= q->size) ? NULL : q->elements[index];
 }
 
 
@@ -90,9 +133,22 @@ void *priqueue_at(priqueue_t *q, int index)
  */
 int priqueue_remove(priqueue_t *q, void *ptr)
 {
-	return 0;
+  int count = 0;
+  for (int i = 0; i < q->size; i++)
+  {
+    if (q->elements[i] == ptr)
+    {
+      for (int j = i; j < q->size - 1; j++)
+      {
+        q->elements[j] = q->elements[j + 1];
+      }
+      q->size--;
+      i--;
+      count++;
+    }
+  }
+  return count;
 }
-
 
 /**
   Removes the specified index from the queue, moving later elements up
@@ -105,7 +161,16 @@ int priqueue_remove(priqueue_t *q, void *ptr)
  */
 void *priqueue_remove_at(priqueue_t *q, int index)
 {
-	return 0;
+  if (index < 0 || index >= q->size)
+    return NULL;
+
+  void *result = q->elements[index];
+  for (int i = index; i < q->size - 1; i++)
+  {
+    q->elements[i] = q->elements[i + 1];
+  }
+  q->size--;
+  return result;
 }
 
 
@@ -115,9 +180,9 @@ void *priqueue_remove_at(priqueue_t *q, int index)
   @param q a pointer to an instance of the priqueue_t data structure
   @return the number of elements in the queue
  */
-int priqueue_size(priqueue_t *q)
+inline int priqueue_size(priqueue_t *q)
 {
-	return 0;
+  return q->size;
 }
 
 
@@ -128,5 +193,8 @@ int priqueue_size(priqueue_t *q)
  */
 void priqueue_destroy(priqueue_t *q)
 {
-
+  free(q->elements);
+  q->elements = NULL;
+  q->size = 0;
+  q->capacity = 0;
 }
